@@ -6,13 +6,16 @@ templates = [
     '.xxx.', '.xxx', '.xxxx',
     '.xxxx.', 'xxxxx']
 
+
 def f_temp(diags, avail):
     res = []
     for i in diags:
         pass
 
+
 def RdAI(game):
     return rd.choice(game.avail)
+
 
 def ImRdAI(game):
     res = set()
@@ -31,6 +34,7 @@ def ImRdAI(game):
     res = res.intersection(set(game.avail))
     return rd.choice(tuple(res))
 
+
 def DefAI(game):
     diags = game.diags(-game.player, 1)
     if not diags:
@@ -41,3 +45,6 @@ def DefAI(game):
         for j in i:
             if j[-1] == 'e':
                 return j[0:-1]
+
+def ImDefAI(game):
+    pass

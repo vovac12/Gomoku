@@ -1,10 +1,11 @@
 import tkinter as t
-import time
 import lib.env as env
 import lib.AI as AI
 
+
 def comma(k=None):
     pass
+
 
 class App:
     def __init__(self, master):
@@ -27,10 +28,8 @@ class App:
         self.menu[0].add_cascade(label='Game', menu=self.menu[1])
         self.menu[0].add_cascade(label='Settings', menu=self.menu[2])
         self.menu[0].add_cascade(label='About', menu=self.menu[3])
-        self.menu[0].add_command(label='Quit', command=self.root.destroy) 
-
+        self.menu[0].add_command(label='Quit', command=self.root.destroy)
         self.menu[1].add_command(label='New game', command=self.new_game)
-
         self.menu[3].add_command(label='Licence', command=comma)
         self.menu[3].add_command(label='Instruction', command=comma)
         self.menu[3].add_command(label='FAQ', command=comma)
@@ -73,7 +72,7 @@ class App:
                     self.winner(tn)
                     return 0
 
-    def pp(self, event = None):
+    def pp(self, event=None):
         if self.game.gameover:
             return 0
         x = event.x
@@ -82,8 +81,8 @@ class App:
         yg = y - y%50
         self.board.delete('tmp')
         self.board.create_oval(5+xg, 5+yg, 45+xg, 45+yg, tags=('tmp'),
-                                fill=self.t_bg[self.game.player],
-                                outline='#eeeeee')
+                               fill=self.t_bg[self.game.player],
+                               outline='#eeeeee')
         self.board.tag_lower('tmp')
         
     def winner(self, player):
@@ -92,6 +91,7 @@ class App:
 
     def new_game(self):
         self._init_board()
+
 
 if __name__ == '__main__':
     root = t.Tk()
