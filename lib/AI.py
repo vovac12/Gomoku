@@ -1,18 +1,71 @@
-import lib.env as env
 import random as rd
 
 templates = [
-    '.x.', '.x', '.xx.', '.xx',
-    '.xxx.', '.xxx', '.xxxx',
-    '.xxxx.', 'xxxxx']
+    'xxxxx',
+    '.xxxx.',
+    '.xxxx',
+    'x.xxx.',
+    'xx.xx.',
+    'xxx.x.',
+    '.xxx.',
+    '.xxx',
+    '.xx.x',
+    '.x.xx',
+    '.xx.']
 
-def f_temp(diags, avail):
-    res = []
-    for i in diags:
-        pass
+
+def f_temp(board, temp):
+    pass
+
+
+def diags(self, p=None, tpl=False):
+        rs = []
+
+        def some(sel, ls, t1, t2):
+            res = []
+            for i in range(10):
+                tmp = (sel[0] + t1 * i, sel[1] + t2 * i)
+                if tmp in ls:
+                    res.append(tmp)
+                else:
+                    if tmp in self.avail and tpl:
+                        res.append((*tmp, 'e'))
+                    break
+            for i in range(1, 10):
+                tmp = (sel[0] - t1 * i, sel[1] - t2 * i)
+                if tmp in ls:
+                    res.append(tmp)
+                else:
+                    if tmp in self.avail and tpl:
+                        res.append((*tmp, 'e'))
+                    break
+            return res
+
+        if p == None:
+            p = self.player
+        if p == 1:
+            wr = self.coords[0].copy()
+        else:
+            wr = self.coords[1].copy()
+        for i in range(len(wr)):
+            k = sorted(some(wr[i], wr, 1, 1))
+            if k not in rs:
+                rs.append(k)
+            k = sorted(some(wr[i], wr, 0, 1))
+            if k not in rs:
+                rs.append(k)
+            k = sorted(some(wr[i], wr, 1, 0))
+            if k not in rs:
+                rs.append(k)
+            k = sorted(some(wr[i], wr, -1, 1))
+            if k not in rs:
+                rs.append(k)
+        return rs
+
 
 def RdAI(game):
     return rd.choice(game.avail)
+
 
 def ImRdAI(game):
     res = set()
@@ -20,24 +73,16 @@ def ImRdAI(game):
     for i in range(game.size):
         for j in range(game.size):
             if game.board[i][j] == game.player:
-                res.add((i+1, j))
-                res.add((i+1, j+1))
-                res.add((i+1, j-1))
-                res.add((i, j+1))
-                res.add((i-1, j))
-                res.add((i-1, j+1))
-                res.add((i-1, j-1))
-                res.add((i, j-1))
+                res.add((i + 1, j))
+                res.add((i + 1, j + 1))
+                res.add((i + 1, j - 1))
+                res.add((i, j + 1))
+                res.add((i - 1, j))
+                res.add((i - 1, j + 1))
+                res.add((i - 1, j - 1))
+                res.add((i, j - 1))
     res = res.intersection(set(game.avail))
     return rd.choice(tuple(res))
 
-def DefAI(game):
-    diags = game.diags(-game.player, 1)
-    if not diags:
-        return rd.choice(game.avail)
-    diags = sorted(diags, key=len, reverse=True)
-    print(len(diags[0]))
-    for i in diags:
-        for j in i:
-            if j[-1] == 'e':
-                return j[0:-1]
+
+list_AI = [RdAI, ImRdAI]
