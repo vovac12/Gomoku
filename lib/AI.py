@@ -14,55 +14,6 @@ templates = [
     '.xx.']
 
 
-def f_temp(board, temp):
-    pass
-
-
-def diags(self, p=None, tpl=False):
-        rs = []
-
-        def some(sel, ls, t1, t2):
-            res = []
-            for i in range(10):
-                tmp = (sel[0] + t1 * i, sel[1] + t2 * i)
-                if tmp in ls:
-                    res.append(tmp)
-                else:
-                    if tmp in self.avail and tpl:
-                        res.append((*tmp, 'e'))
-                    break
-            for i in range(1, 10):
-                tmp = (sel[0] - t1 * i, sel[1] - t2 * i)
-                if tmp in ls:
-                    res.append(tmp)
-                else:
-                    if tmp in self.avail and tpl:
-                        res.append((*tmp, 'e'))
-                    break
-            return res
-
-        if p == None:
-            p = self.player
-        if p == 1:
-            wr = self.coords[0].copy()
-        else:
-            wr = self.coords[1].copy()
-        for i in range(len(wr)):
-            k = sorted(some(wr[i], wr, 1, 1))
-            if k not in rs:
-                rs.append(k)
-            k = sorted(some(wr[i], wr, 0, 1))
-            if k not in rs:
-                rs.append(k)
-            k = sorted(some(wr[i], wr, 1, 0))
-            if k not in rs:
-                rs.append(k)
-            k = sorted(some(wr[i], wr, -1, 1))
-            if k not in rs:
-                rs.append(k)
-        return rs
-
-
 def RdAI(game):
     return rd.choice(game.avail)
 
@@ -85,4 +36,54 @@ def ImRdAI(game):
     return rd.choice(tuple(res))
 
 
-list_AI = [RdAI, ImRdAI]
+def AI(game, dc=0.99, ac=1.01):
+    chlist = []
+    wt = []
+    coef = (dc, ac)
+    curp = 0 if game.player == 1 else 1
+    for i in range(2):
+        for j in game.diags_p[i - curp]:
+            if j[0].count('x') == 4:
+                print(j[0])
+                if '.' not in j[0].strip('.'):
+                    print(j[1][j[0].index('.')])
+                    return j[1][j[0].index('.')]
+                else:
+                    print(j[1][j[0][1:].index('.') + 1])
+                    return j[1][j[0][1:].index('.') + 1]
+            elif j[0][0] == 'n' and j[0][-1] == 'n':
+                continue
+            elif j[0].count('x') == 3:
+                co = 300 * coef[i - curp]
+                if 'xxx' in j[0]:
+                    co *= 4
+                if 'n' in j[0]:
+                    co *= 0.7
+                for k in range(len(j[0])):
+                    if j[0][k] == '.':
+                        if j[1] not in chlist:
+                            chlist.append(j[1][k])
+                            wt.append(co)
+                        else:
+                            wt[chlist.index(j[1][k])] += co
+            elif j[0].count('x') == 2:
+                co = 50 * coef[i - curp]
+                if 'xx' in j[0]:
+                    co *= 2
+                if 'n' in j[0]:
+                    co *= 0.7
+                for k in range(len(j[0])):
+                    if j[0][k] == '.':
+                        if j[1] not in chlist:
+                            chlist.append(j[1][k])
+                            wt.append(co)
+                        else:
+                            wt[chlist.index(j[1][k])] += co
+
+    if not chlist:
+        return rd.choice(game.avail)
+    chlist = sorted(zip(wt, chlist), key=lambda x: x[0])
+    return chlist[-1][1]
+
+
+list_AI = [RdAI, ImRdAI, AI]

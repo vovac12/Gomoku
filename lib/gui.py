@@ -10,7 +10,7 @@ def comma(k=None):
 
 class App:
     def __init__(self, master):
-        self.sets = {'size': 15, 'wc': 5, 'AI': None, 'chs': 35, 'player': 1}
+        self.sets = {'size': 15, 'wc': 5, 'AI': AI.AI, 'chs': 35, 'player': 1}
         self.root = master
         self.root.geometry('800x600+150+150')
         self.frame = t.Frame(self.root, background='blue')
@@ -18,7 +18,6 @@ class App:
         self.board = t.Canvas(self.frame)
         self._init_menu()
         self._init_board()
-        self.AI = AI.ImRdAI
         self.wopt = None
 
     def _init_menu(self):
@@ -121,34 +120,30 @@ class App:
         self._init_board()
 
     def options(self):
-        if self.wopt:
-            self.wopt.destroy()
 
         def applysets(k=None):
             if not k:
                 pass
-            print(type(sets['AI']))
-            sets['AI'] = sets['AI'].get()
-            self.sets = sets
-            print(self.sets, sets)
+            print(type(ss['AI']))
+            self.sets = ss
+        if self.wopt:
+            self.wopt.destroy()
         self.wopt = t.Tk()
-        self.wopt.geometry('300x300+150+150')
-        sets = self.sets.copy()
+        ss = self.sets.copy()
+        self.wopt.geometry('800x600+100+100')
         rbtn = []
-        rbtn.append(t.Radiobutton(self.wopt, variable=sets['AI'],
+        rbtn.append(t.Radiobutton(self.wopt, variable=ss['AI'],
                                   value=AI.RdAI, text='Random'))
-        rbtn.append(t.Radiobutton(self.wopt, variable=sets['AI'],
+        rbtn.append(t.Radiobutton(self.wopt, variable=ss['AI'],
                                   value=AI.ImRdAI, text='Improved Random'))
-        rbtn.append(t.Radiobutton(self.wopt, variable=sets['AI'],
+        rbtn.append(t.Radiobutton(self.wopt, variable=ss['AI'],
                                   value=AI.RdAI, text='SSRandom'))
-        rbtn.append(t.Radiobutton(self.wopt, variable=sets['AI'],
+        rbtn.append(t.Radiobutton(self.wopt, variable=ss['AI'],
                                   value=AI.ImRdAI, text='RRRandom'))
         appbtn = t.Button(self.wopt, text='Apply',
                           command=applysets)
-        rbtn[0].pack()
-        rbtn[1].pack()
-        rbtn[2].pack()
-        rbtn[3].pack()
+        for i in rbtn:
+            i.pack()
         appbtn.pack()
 
 
