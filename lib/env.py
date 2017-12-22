@@ -1,5 +1,5 @@
 import numpy as np
-from lib.my_debug_utils import timeof
+# from lib.my_debug_utils import timeof
 
 
 class gomoku():
@@ -30,7 +30,7 @@ class gomoku():
             return self.gameover
         self.player = -self.player
         return 2
-    @timeof
+    # @timeof
     def diags(self, p=None):
         rs = []
 
